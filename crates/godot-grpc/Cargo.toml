@@ -1,0 +1,40 @@
+[package]
+name = "godot-grpc"
+description = "Native gRPC client support for Godot 4.6+ via gdext + tonic + tokio"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+keywords = ["godot", "grpc", "gdextension", "tonic", "protobuf"]
+categories = ["game-development", "network-programming", "api-bindings"]
+
+[lib]
+# cdylib for Godot to dlopen; rlib so in-crate integration tests can link and
+# exercise the plain tonic transport path without the engine.
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["client", "uds", "tier1"]
+client = []
+server = []                       # Phase 3
+uds = []                          # Linux/macOS only; cfg(unix)-gated in code
+tier1 = []                        # Rust-typed API (raw bytes)
+tier2 = ["dep:prost-reflect"]     # Runtime descriptor API (Dictionary/GrpcMessage)
+
+[dependencies]
+godot = { workspace = true }
+# tonic 0.14 has a built-in UDS connector (unix:// URIs), so no direct tower /
+# hyper-util connector plumbing is needed for Phase 1.
+tonic = { workspace = true }
+tokio = { workspace = true, features = ["rt-multi-thread", "net", "sync", "macros"] }
+tokio-stream = { workspace = true, features = ["sync"] }
+crossbeam-channel = { workspace = true }
+bytes = { workspace = true }
+prost = { workspace = true }
+prost-reflect = { workspace = true, optional = true }
+
+[dev-dependencies]
+grpc-test-fixtures = { path = "../grpc-test-fixtures" }
+tokio = { workspace = true, features = ["rt-multi-thread", "net", "sync", "macros", "time"] }

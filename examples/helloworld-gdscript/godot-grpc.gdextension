@@ -1,0 +1,13 @@
+; Loads godot-grpc straight from the workspace build output (relative to this
+; file). Build first with:  cargo build -p godot-grpc --features tier2
+
+[configuration]
+entry_symbol = "gdext_rust_init"
+compatibility_minimum = 4.6
+reloadable = true
+
+[libraries]
+linux.debug.x86_64   = "res://../../target/debug/libgodot_grpc.so"
+linux.release.x86_64 = "res://../../target/release/libgodot_grpc.so"
+macos.debug          = "res://../../target/debug/libgodot_grpc.dylib"
+macos.release        = "res://../../target/release/libgodot_grpc.dylib"

@@ -1,0 +1,25 @@
+# Internal working document — not for the public repo
+docs/IMPLEMENTATION_PLAN.md
+
+# mdBook build output
+docs/book/book/
+
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+
+# Godot
+.godot/
+*.import
+
+# Generated protobuf descriptor (emitted by grpc-test-fixtures build.rs)
+examples/godot-test-project/helloworld.descriptor.bin
+# Generated GDScript from protoc-gen-godot-grpc
+examples/godot-test-project/generated/
+# Example's generated descriptor (created by protoc per its README)
+examples/helloworld-gdscript/greeter.descriptor.bin
+
+# Editor / OS
+.DS_Store
+*.swp

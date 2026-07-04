@@ -1,0 +1,21 @@
+# Pre-commit hooks. Run with prek (https://github.com/j178/prek) — install once
+# per clone:  prek install
+# (Also compatible with the classic `pre-commit` tool.)
+#
+# Local hooks call the system cargo so there's no external hook repo to pin;
+# they run only when Rust files change and operate on the whole workspace.
+repos:
+  - repo: local
+    hooks:
+      - id: cargo-fmt
+        name: cargo fmt --check
+        entry: cargo fmt --all -- --check
+        language: system
+        types: [rust]
+        pass_filenames: false
+      - id: cargo-clippy
+        name: cargo clippy -D warnings
+        entry: cargo clippy --all-targets -- -D warnings
+        language: system
+        types: [rust]
+        pass_filenames: false

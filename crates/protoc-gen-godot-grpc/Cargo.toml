@@ -1,0 +1,25 @@
+[package]
+name = "protoc-gen-godot-grpc"
+description = "protoc plugin that generates typed GDScript clients for godot-grpc (tier 2)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+keywords = ["godot", "grpc", "protoc-plugin", "gdscript", "codegen"]
+categories = ["development-tools::build-utils", "game-development"]
+
+[[bin]]
+name = "protoc-gen-godot-grpc"
+path = "src/main.rs"
+
+[dependencies]
+prost = { workspace = true }
+prost-types = { workspace = true }
+prost-reflect = { workspace = true }
+heck = { workspace = true }
+base64 = { workspace = true }
+
+[dev-dependencies]
+grpc-test-fixtures = { path = "../grpc-test-fixtures" }

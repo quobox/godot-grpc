@@ -1,0 +1,11 @@
+[book]
+title = "godot-grpc"
+authors = ["Quobox UG (haftungsbeschränkt) and contributors"]
+description = "Native gRPC for Godot 4.6+ via a Rust GDExtension"
+language = "en"
+src = "src"
+
+[output.html]
+default-theme = "navy"
+git-repository-url = "https://github.com/quobox/godot-grpc"
+edit-url-template = "https://github.com/quobox/godot-grpc/edit/master/docs/book/{path}"

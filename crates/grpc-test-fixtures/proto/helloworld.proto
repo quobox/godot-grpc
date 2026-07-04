@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package helloworld;
+
+// The classic gRPC greeter, used as a test fixture for godot-grpc.
+service Greeter {
+  rpc SayHello(HelloRequest) returns (HelloReply);
+  // Server-streaming: emits one greeting per count (count defaults to 3).
+  rpc SayHelloStream(HelloRequest) returns (stream HelloReply);
+  // Client-streaming: one reply greeting all names sent.
+  rpc SayHelloClientStream(stream HelloRequest) returns (HelloReply);
+  // Bidirectional: one greeting reply per request.
+  rpc SayHelloBidi(stream HelloRequest) returns (stream HelloReply);
+  // Echoes the payload back unchanged (exercises every field type).
+  rpc Echo(Payload) returns (Payload);
+  // Always fails with INVALID_ARGUMENT (error-path testing).
+  rpc AlwaysFails(HelloRequest) returns (HelloReply);
+  // Streams a greeting every 100ms indefinitely (cancellation testing).
+  rpc SayHelloForever(HelloRequest) returns (stream HelloReply);
+}
+
+enum Color {
+  COLOR_UNKNOWN = 0;
+  COLOR_RED = 1;
+  COLOR_GREEN = 2;
+}
+
+message Nested {
+  string label = 1;
+}
+
+message Payload {
+  int32 i = 1;
+  int64 big = 2;
+  double d = 3;
+  bool flag = 4;
+  string text = 5;
+  bytes blob = 6;
+  Color color = 7;
+  repeated string tags = 8;
+  map<string, int32> counts = 9;
+  Nested nested = 10;
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}

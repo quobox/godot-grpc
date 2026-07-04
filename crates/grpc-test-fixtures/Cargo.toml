@@ -1,0 +1,18 @@
+[package]
+name = "grpc-test-fixtures"
+description = "Dev-only test fixtures for godot-grpc: compiled helloworld proto + in-process tonic server (TCP/UDS)"
+publish = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+tonic = { workspace = true }
+tonic-prost = { workspace = true }
+prost = { workspace = true }
+tokio = { workspace = true, features = ["rt-multi-thread", "net", "sync", "macros", "time"] }
+tokio-stream = { workspace = true, features = ["net", "sync"] }
+
+[build-dependencies]
+tonic-prost-build = { workspace = true }

@@ -1,0 +1,47 @@
+name: Docs
+
+on:
+  push:
+    branches: [master]
+    # Only rebuild/redeploy when something that affects the rendered book
+    # changes -- avoids needless (and occasionally rate-limited) Pages deploys
+    # on unrelated pushes.
+    paths:
+      - "docs/book/**"
+      - ".github/workflows/docs.yml"
+  # Allow manual redeploys from the Actions tab.
+  workflow_dispatch:
+
+# Allow the workflow to publish to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One concurrent Pages deployment; don't cancel an in-flight publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: latest
+      - run: mdbook build docs/book
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs/book/book
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

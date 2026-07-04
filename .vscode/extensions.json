@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "bufbuild.vscode-buf",
+        "editorconfig.editorconfig",
+        "geequlim.godot-tools",
+        "redhat.vscode-yaml",
+        "rust-lang.rust-analyzer",
+        "tombi-toml.tombi"
+    ]
+}

@@ -1,0 +1,30 @@
+# Single v2 buf config at the repo root (= the VS Code workspace root the buf
+# LSP anchors on via the .git marker). Two modules with distinct import paths.
+version: v2
+modules:
+  # Test fixtures: not a published API contract. Lint is relaxed (see except) —
+  # the protos use compact, shared types on purpose to feed the test suite, and
+  # making them production-conformant would ripple into method paths, codegen
+  # snapshots, and the GDScript e2e scenes for zero real gain.
+  - path: crates/grpc-test-fixtures/proto
+    lint:
+      use:
+        - STANDARD
+      except:
+        - PACKAGE_DIRECTORY_MATCH      # would require proto/helloworld/helloworld.proto
+        - PACKAGE_VERSION_SUFFIX       # no "helloworld.v1" for a fixture
+        - SERVICE_SUFFIX               # "Greeter", not "GreeterService"
+        - RPC_REQUEST_STANDARD_NAME    # HelloRequest, not SayHelloRequest
+        - RPC_RESPONSE_STANDARD_NAME   # HelloReply, not SayHelloResponse
+        - RPC_REQUEST_RESPONSE_UNIQUE  # request/response types shared across RPCs on purpose
+        - ENUM_ZERO_VALUE_SUFFIX       # COLOR_UNKNOWN, not COLOR_UNSPECIFIED
+  # User-facing example: a template users imitate, so it follows the full
+  # STANDARD ruleset (inherited from the top-level lint below) — no exceptions.
+  - path: examples/helloworld-gdscript/proto
+# Default lint config for modules without their own (i.e. the example module).
+lint:
+  use:
+    - STANDARD
+breaking:
+  use:
+    - WIRE_JSON

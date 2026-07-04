@@ -1,0 +1,6 @@
+{
+    // Analyze with the tier-2 feature on, so the descriptor/message/service/
+    // convert modules (all #[cfg(feature = "tier2")]) aren't greyed out as
+    // inactive. The default build stays tier1-only; this only affects the editor.
+    "rust-analyzer.cargo.features": ["tier2"]
+}

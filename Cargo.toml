@@ -1,0 +1,42 @@
+[workspace]
+members = ["crates/*"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+license = "MIT"
+repository = "https://github.com/quobox/godot-grpc"
+
+[workspace.dependencies]
+# Godot bindings (gdext) — Edition 2024, Godot 4.6.
+godot = "0.5.3"
+
+# gRPC stack. tonic 0.14 split the prost runtime/codegen into tonic-prost / tonic-prost-build.
+tonic = "0.14.6"
+tonic-prost = "0.14.6"
+tonic-prost-build = "0.14.6"
+prost = "0.14.3"
+prost-types = "0.14.3"
+# Tier-2 runtime descriptor API: DynamicMessage + DescriptorPool.
+prost-reflect = "0.16.4"
+
+# Async runtime. Pinned to the 1.51 LTS line on purpose — `~1.51`, NOT `1.51`,
+# so cargo does not resolve the newer 1.52.x off the LTS line (kiosk reliability).
+tokio = { version = "~1.51", default-features = false }
+tokio-stream = "0.1"
+
+# Lock-free Tokio-thread -> Godot-main-thread message passing.
+crossbeam-channel = "0.5"
+
+# Buf/BufMut for the passthrough gRPC codec (matches tonic's bytes major).
+bytes = "1"
+
+# UDS connector plumbing (transitive via tonic, pinned for the service_fn connector).
+tower = "0.5"
+hyper-util = "0.1"
+
+# Codegen plugin (protoc-gen-godot-grpc).
+heck = "0.5"
+base64 = "0.22"

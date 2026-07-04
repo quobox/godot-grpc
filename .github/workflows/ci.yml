@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    name: fmt · clippy · test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      # grpc-test-fixtures' build.rs compiles a .proto via protoc.
+      - name: Install protoc (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+      - name: Install protoc (macOS)
+        if: runner.os == 'macOS'
+        run: brew install protobuf
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Format
+        run: cargo fmt --all -- --check
+
+      - name: Clippy (default — tier 1)
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Clippy (tier 2)
+        run: cargo clippy --all-targets --features godot-grpc/tier2 -- -D warnings
+
+      - name: Test
+        run: cargo test --workspace
+
+      - name: Build cdylib (tier 2)
+        run: cargo build -p godot-grpc --features tier2
+
+  # Lint + format-check the .proto modules. BSR push is disabled (our modules
+  # are unnamed and we don't publish to the registry); breaking-change checks
+  # run automatically against the base branch on pull requests.
+  buf:
+    name: buf lint · format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: bufbuild/buf-action@v1
+        with:
+          push: false
+          archive: false
